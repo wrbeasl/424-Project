@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <tins/tins.h>
+#include <tins/sniffer.h>
 #include <iostream>
 
 using namespace Tins;
@@ -13,8 +14,8 @@ bool handler(const PDU& pkt) {
 
     if(udp.sport() == 53 || udp.dport() == 53) {
 
-        DNS dns = pkt.rfind_pdu<RawPDU>().to<DNS>();
-        IP ip = pkt.rfind_pdu<RawPDU>().to<IP>();
+        Tins::DNS dns = pkt.rfind_pdu<RawPDU>().to<DNS>();
+        Tins::IP ip = pkt.rfind_pdu<RawPDU>().to<IP>();
 
 
 
@@ -37,34 +38,19 @@ bool handler(const PDU& pkt) {
     return true;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     std::string Wire;
     std::string Port;
 
     std::cout << "Hello and welcome to the Packet Sniffer\n";
-    std::cout << "Please give which wire to sniff on: \n";
-    std::cin >> Wire;
+    std::cout << "Starting the Packet Snifer...\n";
+    Wire = argv[1];
     std::vector<Packet> vt;
 
-    SnifferConfiguration config;
+    Tins::SnifferConfiguration config;
     config.set_promisc_mode(true);
     
-    Sniffer sniffer(Wire, config);
+    Tins::Sniffer sniffer(Wire, config);
     sniffer.sniff_loop(handler);
-    /*
-    while(vt.size() != 10)
-        // next_packet returns a PtrPacket, which can be implicitly converted to Packet.
-        vt.push_back(sniffer.next_packet());
-    // Done, now let's check the packets
-    for(const auto& packet : vt) {
-        // Is there an IP PDU somewhere?
-        if(packet.pdu()->find_pdu<IP>()) {
-            // Just print timestamp's seconds and IP source address
-            std::cout << "At: " << packet.timestamp().seconds()
-                    << " - " << packet.pdu()->rfind_pdu<IP>().src_addr() 
-                    << std::endl;
 
-            //handler(packet.pdu()->find_pdu<IP>());
-        }
-    } */
 }

@@ -3,7 +3,6 @@
 #include <map>
 #include <iostream>
 #include <functional>
-
 using namespace Tins;
 
 class arp_monitor {
@@ -58,6 +57,7 @@ int main(int argc, char *argv[])
         std::cout << "Usage: " << *argv << " <interface>\n";
         return 1;
     }
+    std::cout << "Starting the ARP Monitor program\n";
     arp_monitor monitor;
     Sniffer sniffer(argv[1], 2000, true, "arp");
     monitor.run(sniffer);
