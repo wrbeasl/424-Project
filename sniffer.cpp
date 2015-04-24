@@ -44,7 +44,8 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Hello and welcome to the Packet Sniffer\n";
     std::cout << "Starting the Packet Snifer...\n";
-    Wire = argv[1];
+    if(argv[1] == NULL) { std::cout << "Error: No wire arugment given, please either specify wlan0 or eth0.\n"; std::cin >> Wire; }
+    else Wire = argv[1];
     std::vector<Packet> vt;
 
     Tins::SnifferConfiguration config;
